@@ -51,21 +51,21 @@ src/
 ### Installation & Execution
 
 1.  Clone the Repository
-git clone https://github.com/Dhirajsah18/Smart-TODO-API.git
-cd smart-todo-api
+- git clone https://github.com/Dhirajsah18/Smart-TODO-API.git
+- cd smart-todo-api
 
 2. Install Dependencies
-npm install
+- npm install
 
 3. Environment Variables Setup
 Create a .env file in the root directory and add the following:
 
-PORT=8000
-MONGO_URI=mongodb://127.0.0.1:27017/smarttodo
-JWT_SECRET=your_secret_key
+- PORT=8000
+- MONGO_URI=mongodb://127.0.0.1:27017/smarttodo
+- JWT_SECRET=your_secret_key
 
 4. Run the Server
-npm run dev
+- npm run dev
 
 If everything is configured correctly, you should see:
 
