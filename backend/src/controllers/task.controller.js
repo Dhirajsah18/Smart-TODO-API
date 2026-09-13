@@ -2,14 +2,19 @@ import Task from "../models/Task.js";
 
 export const createTask = async (req, res) => {
     try {
-        const { title } = req.body;
+        const { title, dueDate, priority } = req.body;
         if (!title || !title.trim()) {
             return res.status(400).json({ message: "Task title is required" });
         }
 
+        const validPriorities = ["low", "medium", "high"];
+        const taskPriority = validPriorities.includes(priority) ? priority : "medium";
+
         const task = await Task.create({
             title: title.trim(),
             completed: req.body.completed || false,
+            dueDate: dueDate ? new Date(dueDate) : null,
+            priority: taskPriority,
             user: req.user.userId
         });
         res.status(201).json(task);
@@ -31,9 +36,23 @@ export const getTasks = async (req, res) => {
 
 export const updateTask = async (req, res) => {
     try {
+        const updateData = { ...req.body };
+        if (updateData.title !== undefined) {
+            updateData.title = updateData.title.trim();
+        }
+        if (updateData.dueDate !== undefined) {
+            updateData.dueDate = updateData.dueDate ? new Date(updateData.dueDate) : null;
+        }
+        if (updateData.priority !== undefined) {
+            const validPriorities = ["low", "medium", "high"];
+            if (!validPriorities.includes(updateData.priority)) {
+                updateData.priority = "medium";
+            }
+        }
+
         const task = await Task.findOneAndUpdate(
             { _id: req.params.id, user: req.user.userId },
-            req.body,
+            updateData,
             { new: true, runValidators: true }
         );
 

@@ -9,20 +9,20 @@ export const TaskList = ({
   searchQuery,
   onToggle,
   onUpdate,
-  onDelete
+  onDelete,
 }) => {
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
         {[1, 2, 3].map((i) => (
           <div
             key={i}
             className="card-panel"
             style={{
               padding: '1.25rem',
-              height: '52px',
+              height: '56px',
               opacity: 0.6,
-              backgroundColor: '#f1f5f9'
+              backgroundColor: '#F1F5F9',
             }}
           />
         ))}
@@ -41,31 +41,34 @@ export const TaskList = ({
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#ffffff'
+          backgroundColor: '#FFFFFF',
+          border: '1.5px solid var(--border-color)',
         }}
       >
-        <div style={{
-          width: '46px',
-          height: '46px',
-          borderRadius: '50%',
-          backgroundColor: 'var(--bg-input)',
-          border: '1px solid var(--border-color)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'var(--text-dim)',
-          marginBottom: '0.85rem'
-        }}>
+        <div
+          style={{
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            backgroundColor: 'var(--primary-light)',
+            border: '1px solid rgba(252, 163, 17, 0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'var(--c-amber)',
+            marginBottom: '0.85rem',
+          }}
+        >
           {activeFilter === 'completed' ? (
-            <CheckCircle size={22} color="var(--success)" />
+            <CheckCircle size={24} color="var(--success)" />
           ) : searchQuery ? (
-            <Inbox size={22} />
+            <Inbox size={24} color="var(--c-amber)" />
           ) : (
-            <ListTodo size={22} color="var(--primary)" />
+            <ListTodo size={24} color="var(--c-amber)" />
           )}
         </div>
 
-        <h3 style={{ fontSize: '1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
+        <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
           {searchQuery
             ? `No tasks matching "${searchQuery}"`
             : activeFilter === 'completed'
@@ -75,14 +78,14 @@ export const TaskList = ({
             : 'No tasks yet'}
         </h3>
 
-        <p style={{ fontSize: '0.825rem', color: 'var(--text-muted)', maxWidth: '280px' }}>
+        <p style={{ fontSize: '0.84rem', color: 'var(--text-muted)', maxWidth: '300px', lineHeight: 1.4 }}>
           {searchQuery
-            ? 'Try searching with another keyword.'
+            ? 'Try searching with another keyword or adjust filters.'
             : activeFilter === 'completed'
-            ? 'Completed tasks will show up here.'
+            ? 'Tasks marked done will show up here.'
             : activeFilter === 'pending'
-            ? 'You have cleared all pending items.'
-            : 'Add your first task above to get started.'}
+            ? 'Great job! You have cleared all pending items.'
+            : 'Add your first task above with a priority and due date to get started.'}
         </p>
       </div>
     );

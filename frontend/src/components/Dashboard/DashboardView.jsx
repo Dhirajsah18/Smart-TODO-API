@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { taskApi } from '../../services/api';
 import { Header } from './Header';
 import { StatsOverview } from './StatsOverview';
@@ -6,20 +6,22 @@ import { TaskInput } from './TaskInput';
 import { TaskFilters } from './TaskFilters';
 import { TaskList } from './TaskList';
 
+const PRIORITY_WEIGHT = {
+  high: 3,
+  medium: 2,
+  low: 1,
+};
+
 export const DashboardView = ({ addToast }) => {
   const [tasks, setTasks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState('all');
+  const [activePriority, setActivePriority] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
 
-  // Load tasks on mount
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     setIsLoading(true);
     try {
       const data = await taskApi.getTasks();
@@ -29,12 +31,19 @@ export const DashboardView = ({ addToast }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [addToast]);
 
-  const handleAddTask = async (title) => {
+  // Load tasks on mount
+  useEffect(() => {
+    fetchTasks();
+  }, [fetchTasks]);
+
+  const handleAddTask = async (taskData) => {
     setIsCreating(true);
     try {
-      const newTask = await taskApi.createTask({ title });
+      // Support both string or object parameter
+      const payload = typeof taskData === 'string' ? { title: taskData } : taskData;
+      const newTask = await taskApi.createTask(payload);
       setTasks((prev) => [newTask, ...prev]);
       addToast('Task added successfully!', 'success');
     } catch (err) {
@@ -94,6 +103,11 @@ export const DashboardView = ({ addToast }) => {
       result = result.filter((t) => t.completed);
     }
 
+    // Filter by priority
+    if (activePriority !== 'all') {
+      result = result.filter((t) => (t.priority || 'medium') === activePriority);
+    }
+
     // Filter by search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -108,6 +122,21 @@ export const DashboardView = ({ addToast }) => {
       if (sortBy === 'oldest') {
         return new Date(a.createdAt || 0) - new Date(b.createdAt || 0);
       }
+      if (sortBy === 'priority') {
+        const weightA = PRIORITY_WEIGHT[a.priority || 'medium'] || 2;
+        const weightB = PRIORITY_WEIGHT[b.priority || 'medium'] || 2;
+        if (weightB !== weightA) return weightB - weightA;
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      }
+      if (sortBy === 'dueDate') {
+        // Tasks with due dates appear first, sorted by soonest date
+        if (a.dueDate && b.dueDate) {
+          return new Date(a.dueDate) - new Date(b.dueDate);
+        }
+        if (a.dueDate) return -1;
+        if (b.dueDate) return 1;
+        return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+      }
       if (sortBy === 'alphabetical') {
         return a.title.localeCompare(b.title);
       }
@@ -115,37 +144,47 @@ export const DashboardView = ({ addToast }) => {
     });
 
     return result;
-  }, [tasks, activeFilter, searchQuery, sortBy]);
+  }, [tasks, activeFilter, activePriority, searchQuery, sortBy]);
 
-  const counts = useMemo(() => ({
-    all: tasks.length,
-    pending: tasks.filter((t) => !t.completed).length,
-    completed: tasks.filter((t) => t.completed).length,
-  }), [tasks]);
+  const counts = useMemo(
+    () => ({
+      all: tasks.length,
+      pending: tasks.filter((t) => !t.completed).length,
+      completed: tasks.filter((t) => t.completed).length,
+      high: tasks.filter((t) => (t.priority || 'medium') === 'high').length,
+      medium: tasks.filter((t) => (t.priority || 'medium') === 'medium').length,
+      low: tasks.filter((t) => (t.priority || 'medium') === 'low').length,
+    }),
+    [tasks]
+  );
 
   return (
     <div className="main-content">
-      <Header />
-      <StatsOverview tasks={tasks} />
-      <TaskInput onAddTask={handleAddTask} isCreating={isCreating} />
-      <TaskFilters
-        searchQuery={searchQuery}
-        onSearchChange={setSearchQuery}
-        activeFilter={activeFilter}
-        onFilterChange={setActiveFilter}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-        counts={counts}
-      />
-      <TaskList
-        tasks={filteredAndSortedTasks}
-        isLoading={isLoading}
-        activeFilter={activeFilter}
-        searchQuery={searchQuery}
-        onToggle={handleToggleTask}
-        onUpdate={handleUpdateTask}
-        onDelete={handleDeleteTask}
-      />
+      <div className="dashboard-master-container">
+        <Header />
+        <StatsOverview tasks={tasks} />
+        <TaskInput onAddTask={handleAddTask} isCreating={isCreating} />
+        <TaskFilters
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          activeFilter={activeFilter}
+          onFilterChange={setActiveFilter}
+          activePriority={activePriority}
+          onPriorityChange={setActivePriority}
+          sortBy={sortBy}
+          onSortChange={setSortBy}
+          counts={counts}
+        />
+        <TaskList
+          tasks={filteredAndSortedTasks}
+          isLoading={isLoading}
+          activeFilter={activeFilter}
+          searchQuery={searchQuery}
+          onToggle={handleToggleTask}
+          onUpdate={handleUpdateTask}
+          onDelete={handleDeleteTask}
+        />
+      </div>
     </div>
   );
 };

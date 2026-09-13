@@ -45,95 +45,114 @@ export const AuthView = ({ addToast }) => {
   };
 
   return (
-    <div style={{
-      minHeight: '80vh',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '1.5rem'
-    }}>
+    <div
+      style={{
+        minHeight: '85vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '1.5rem',
+      }}
+    >
       <div
-        className="card-panel"
         style={{
           width: '100%',
-          maxWidth: '400px',
-          padding: '2.25rem 2rem',
+          maxWidth: '420px',
+          padding: '2.5rem 2.2rem',
+          backgroundColor: '#FFFFFF',
+          border: '2px solid var(--border-strong)',
+          borderRadius: 'var(--radius-xl)',
+          boxShadow: 'var(--shadow-container)',
         }}
       >
         {/* Brand Header */}
-        <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '46px',
-            height: '46px',
-            borderRadius: 'var(--radius-md)',
-            backgroundColor: 'var(--primary-light)',
-            color: 'var(--primary)',
-            marginBottom: '0.75rem',
-          }}>
-            <CheckSquare size={24} />
+        <div style={{ textAlign: 'center', marginBottom: '1.85rem' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '54px',
+              height: '54px',
+              borderRadius: '12px',
+              backgroundColor: 'var(--primary)',
+              color: 'var(--navy)',
+              marginBottom: '1rem',
+              boxShadow: '0 4px 14px rgba(252, 163, 17, 0.4)',
+            }}
+          >
+            <CheckSquare size={30} strokeWidth={2.5} />
           </div>
-          <h1 style={{
-            fontFamily: 'var(--font-heading)',
-            fontSize: '1.6rem',
-            fontWeight: 700,
-            marginBottom: '0.25rem',
-            color: 'var(--text-main)'
-          }}>
+          <h1
+            style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.85rem',
+              fontWeight: 800,
+              marginBottom: '0.35rem',
+              color: 'var(--text-main)',
+              letterSpacing: '-0.02em',
+            }}
+          >
             Smart ToDo
           </h1>
-          <p style={{ color: 'var(--text-muted)', fontSize: '0.85rem' }}>
+          <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}>
             {isLogin
-              ? 'Sign in to access your tasks.'
-              : 'Create an account to start managing tasks.'}
+              ? 'Sign in to manage tasks, due dates & priorities.'
+              : 'Create your account to organize your tasks.'}
           </p>
         </div>
 
         {/* Toggle Mode Tabs */}
-        <div style={{
-          display: 'flex',
-          backgroundColor: 'var(--bg-hover)',
-          padding: '4px',
-          borderRadius: 'var(--radius-md)',
-          marginBottom: '1.5rem',
-          border: '1px solid var(--border-color)'
-        }}>
+        <div
+          style={{
+            display: 'flex',
+            backgroundColor: '#F1F5F9',
+            padding: '4px',
+            borderRadius: 'var(--radius-md)',
+            marginBottom: '1.5rem',
+            border: '1px solid var(--border-color)',
+          }}
+        >
           <button
             type="button"
-            onClick={() => { setIsLogin(true); setError(''); }}
+            onClick={() => {
+              setIsLogin(true);
+              setError('');
+            }}
             style={{
               flex: 1,
-              padding: '0.5rem 0',
+              padding: '0.55rem 0',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.88rem',
+              fontWeight: 700,
               cursor: 'pointer',
-              backgroundColor: isLogin ? '#ffffff' : 'transparent',
-              color: isLogin ? 'var(--text-main)' : 'var(--text-muted)',
-              boxShadow: isLogin ? '0 1px 2px rgba(0, 0, 0, 0.08)' : 'none',
-              transition: 'all 0.15s ease'
+              backgroundColor: isLogin ? '#FFFFFF' : 'transparent',
+              color: isLogin ? 'var(--navy)' : 'var(--text-muted)',
+              boxShadow: isLogin ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
+              transition: 'all 0.15s ease',
             }}
           >
             Sign In
           </button>
           <button
             type="button"
-            onClick={() => { setIsLogin(false); setError(''); }}
+            onClick={() => {
+              setIsLogin(false);
+              setError('');
+            }}
             style={{
               flex: 1,
-              padding: '0.5rem 0',
+              padding: '0.55rem 0',
               border: 'none',
               borderRadius: 'var(--radius-sm)',
-              fontSize: '0.875rem',
-              fontWeight: 600,
+              fontSize: '0.88rem',
+              fontWeight: 700,
               cursor: 'pointer',
-              backgroundColor: !isLogin ? '#ffffff' : 'transparent',
-              color: !isLogin ? 'var(--text-main)' : 'var(--text-muted)',
-              boxShadow: !isLogin ? '0 1px 2px rgba(0, 0, 0, 0.08)' : 'none',
-              transition: 'all 0.15s ease'
+              backgroundColor: !isLogin ? '#FFFFFF' : 'transparent',
+              color: !isLogin ? 'var(--navy)' : 'var(--text-muted)',
+              boxShadow: !isLogin ? '0 1px 3px rgba(0, 0, 0, 0.08)' : 'none',
+              transition: 'all 0.15s ease',
             }}
           >
             Sign Up
@@ -142,15 +161,17 @@ export const AuthView = ({ addToast }) => {
 
         {/* Error Alert */}
         {error && (
-          <div style={{
-            backgroundColor: 'var(--danger-bg)',
-            border: '1px solid rgba(239, 68, 68, 0.2)',
-            borderRadius: 'var(--radius-sm)',
-            padding: '0.65rem 0.9rem',
-            color: 'var(--danger-text)',
-            fontSize: '0.85rem',
-            marginBottom: '1.25rem',
-          }}>
+          <div
+            style={{
+              backgroundColor: 'var(--danger-bg)',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              borderRadius: 'var(--radius-sm)',
+              padding: '0.7rem 0.95rem',
+              color: 'var(--danger-text)',
+              fontSize: '0.85rem',
+              marginBottom: '1.25rem',
+            }}
+          >
             {error}
           </div>
         )}
@@ -159,7 +180,9 @@ export const AuthView = ({ addToast }) => {
         <form onSubmit={handleSubmit} autoComplete="off">
           {!isLogin && (
             <div className="input-group">
-              <label className="input-label" htmlFor="name">Full Name</label>
+              <label className="input-label" htmlFor="name">
+                Full Name
+              </label>
               <div className="input-field-wrapper">
                 <User size={16} className="input-field-icon" />
                 <input
@@ -177,7 +200,9 @@ export const AuthView = ({ addToast }) => {
           )}
 
           <div className="input-group">
-            <label className="input-label" htmlFor="email">Email Address</label>
+            <label className="input-label" htmlFor="email">
+              Email Address
+            </label>
             <div className="input-field-wrapper">
               <Mail size={16} className="input-field-icon" />
               <input
@@ -194,18 +219,20 @@ export const AuthView = ({ addToast }) => {
           </div>
 
           <div className="input-group">
-            <label className="input-label" htmlFor="password">Password</label>
+            <label className="input-label" htmlFor="password">
+              Password
+            </label>
             <div className="input-field-wrapper">
               <Lock size={16} className="input-field-icon" />
               <input
                 id="password"
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input-field with-icon"
                 style={{ paddingRight: '2.5rem' }}
-                autoComplete={isLogin ? "current-password" : "new-password"}
+                autoComplete={isLogin ? 'current-password' : 'new-password'}
                 required
               />
               <button
@@ -219,9 +246,9 @@ export const AuthView = ({ addToast }) => {
                   color: 'var(--text-dim)',
                   cursor: 'pointer',
                   display: 'flex',
-                  alignItems: 'center'
+                  alignItems: 'center',
                 }}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
               >
                 {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -232,33 +259,38 @@ export const AuthView = ({ addToast }) => {
             type="submit"
             className="btn btn-primary"
             disabled={isLoading}
-            style={{ width: '100%', marginTop: '0.5rem', padding: '0.75rem' }}
+            style={{ width: '100%', marginTop: '0.75rem', padding: '0.8rem', fontSize: '0.95rem' }}
           >
             {isLoading ? (
-              <span>Loading...</span>
+              <span>Processing...</span>
             ) : (
               <>
-                <span>{isLogin ? 'Sign In' : 'Sign Up'}</span>
-                <ArrowRight size={16} />
+                <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                <ArrowRight size={16} strokeWidth={2.8} />
               </>
             )}
           </button>
         </form>
 
-        <div style={{ textAlign: 'center', marginTop: '1.5rem' }}>
+        <div style={{ textAlign: 'center', marginTop: '1.65rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
-            {isLogin ? "Don't have an account? " : "Already have an account? "}
+            {isLogin ? "Don't have an account? " : 'Already have an account? '}
           </span>
           <button
             type="button"
-            onClick={() => { setIsLogin(!isLogin); setError(''); }}
+            onClick={() => {
+              setIsLogin(!isLogin);
+              setError('');
+            }}
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--primary)',
-              fontWeight: 600,
+              color: 'var(--navy)',
+              fontWeight: 700,
               fontSize: '0.85rem',
               cursor: 'pointer',
+              textDecoration: 'underline',
+              marginLeft: '0.25rem',
             }}
           >
             {isLogin ? 'Sign up' : 'Sign in'}
